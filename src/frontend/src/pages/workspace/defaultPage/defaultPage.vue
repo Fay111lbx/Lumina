@@ -395,9 +395,9 @@ watch(
         <div class="avatar-wrapper">
           <img src="../../../assets/robot.svg" alt="智言" class="avatar" />
         </div>
-        <h1 class="welcome-title">我是OmniAgent小助手，很高兴见到你！</h1>
+        <h1 class="welcome-title">我是LuminaAgent小助手，很高兴见到你！</h1>
         <p class="welcome-subtitle">
-          欢迎体验OmniAgent，开启您的智能协作新纪元~
+          欢迎体验LuminaAgent，开启您的智能协作新纪元~
         </p>
       </div>
 
@@ -446,7 +446,7 @@ watch(
         <div class="input-wrapper" :class="{ 'lingseek-glow': selectedMode === 'lingseek' }">
           <textarea
             v-model="inputMessage"
-            placeholder="给Omni发消息，让Omni帮你完成任务~"
+            placeholder="给Lumina发消息，让Lumina帮你完成任务~"
             class="message-input"
             rows="4"
             @keydown="handleKeydown"

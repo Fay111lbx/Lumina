@@ -3,7 +3,8 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketException
 from fastapi import status as http_status
-from fastapi_jwt_auth import AuthJWT
+# from fastapi_jwt_auth import AuthJWT
+from agentchat.utils.jwt_helper import verify_token
 from loguru import logger
 
 from agentchat.services.autobuild.manager import AutoBuildManager
@@ -14,17 +15,27 @@ router = APIRouter()
 
 @router.websocket('/build/auto')
 async def chat(websocket: WebSocket,
-               chat_id: Optional[str] = None,
-               Authorize: AuthJWT = Depends()):
+               chat_id: Optional[str] = None):
     try:
-        Authorize.jwt_required(auth_from='websocket', websocket=websocket)
+        # 从websocket获取token
+        token = None
+        if "cookie" in websocket.headers:
+            cookies = websocket.headers["cookie"]
+            for cookie in cookies.split(";"):
+                if "access_token_cookie" in cookie:
+                    token = cookie.split("=")[1].strip()
+                    break
 
-        payload = Authorize.get_jwt_subject()
-        if not isinstance(payload, str):
+        if not token:
+            await websocket.close(code=http_status.WS_1008_POLICY_VIOLATION, reason='Unauthorized')
+            return
+
+        payload = verify_token(token)
+        if not isinstance(payload.get("sub"), str):
             raise HTTPException(status_code=http_status.HTTP_401_UNAUTHORIZED, detail="Invalid JWT payload")
-        payload = json.loads(payload)
+        payload_data = json.loads(payload.get("sub"))
 
-        login_user = UserPayload(**payload)
+        login_user = UserPayload(**payload_data)
         chat_manager = AutoBuildManager()
         await chat_manager.control_auto_client(login_user=login_user, websocket=websocket, chat_id=chat_id or "")
 

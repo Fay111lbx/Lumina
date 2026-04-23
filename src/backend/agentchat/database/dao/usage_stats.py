@@ -156,3 +156,159 @@ class UsageStatsDao:
 
             result = await session.exec(statement)
             return result.all()
+
+    # ========== 管理员统计方法 ==========
+
+    @classmethod
+    def get_total_token_usage(cls) -> dict:
+        """获取系统总Token使用量"""
+        from sqlmodel import func
+        with session_getter() as session:
+            statement = select(
+                func.sum(UsageStats.input_tokens).label('total_input_tokens'),
+                func.sum(UsageStats.output_tokens).label('total_output_tokens')
+            )
+            result = session.exec(statement).first()
+            return {
+                'total_input_tokens': result[0] or 0,
+                'total_output_tokens': result[1] or 0
+            }
+
+    @classmethod
+    def get_token_usage_by_date(cls, date) -> dict:
+        """获取指定日期的Token使用量"""
+        from datetime import datetime, timedelta
+        from sqlmodel import func
+
+        start_time = datetime.combine(date, datetime.min.time())
+        end_time = start_time + timedelta(days=1)
+
+        with session_getter() as session:
+            statement = select(
+                func.sum(UsageStats.input_tokens).label('input_tokens'),
+                func.sum(UsageStats.output_tokens).label('output_tokens')
+            ).where(
+                UsageStats.create_time >= start_time,
+                UsageStats.create_time < end_time
+            )
+            result = session.exec(statement).first()
+            return {
+                'input_tokens': result[0] or 0,
+                'output_tokens': result[1] or 0
+            }
+
+    @classmethod
+    def get_user_token_usage(cls, user_id: str, start_date: datetime) -> dict:
+        """获取指定用户从某日期开始的Token使用量"""
+        from sqlmodel import func
+        with session_getter() as session:
+            statement = select(
+                func.sum(UsageStats.input_tokens).label('input_tokens'),
+                func.sum(UsageStats.output_tokens).label('output_tokens')
+            ).where(
+                UsageStats.user_id == user_id,
+                UsageStats.create_time >= start_date
+            )
+            result = session.exec(statement).first()
+            return {
+                'input_tokens': result[0] or 0,
+                'output_tokens': result[1] or 0
+            }
+
+    @classmethod
+    def get_user_model_usage(cls, user_id: str, start_date: datetime) -> list:
+        """获取指定用户的模型使用统计"""
+        from sqlmodel import func
+        with session_getter() as session:
+            statement = select(
+                UsageStats.model,
+                func.count(UsageStats.id).label('count'),
+                func.sum(UsageStats.input_tokens).label('input_tokens'),
+                func.sum(UsageStats.output_tokens).label('output_tokens')
+            ).where(
+                UsageStats.user_id == user_id,
+                UsageStats.create_time >= start_date
+            ).group_by(UsageStats.model)
+
+            results = session.exec(statement).all()
+            return [
+                {
+                    'model': r[0],
+                    'count': r[1],
+                    'input_tokens': r[2] or 0,
+                    'output_tokens': r[3] or 0
+                }
+                for r in results
+            ]
+
+    @classmethod
+    def get_user_agent_usage(cls, user_id: str, start_date: datetime) -> list:
+        """获取指定用户的Agent使用统计"""
+        from sqlmodel import func
+        with session_getter() as session:
+            statement = select(
+                UsageStats.agent,
+                func.count(UsageStats.id).label('count')
+            ).where(
+                UsageStats.user_id == user_id,
+                UsageStats.create_time >= start_date
+            ).group_by(UsageStats.agent)
+
+            results = session.exec(statement).all()
+            return [
+                {
+                    'agent': r[0],
+                    'count': r[1]
+                }
+                for r in results
+            ]
+
+    @classmethod
+    def get_model_statistics(cls, start_date: datetime) -> list:
+        """获取所有模型的使用统计"""
+        from sqlmodel import func
+        with session_getter() as session:
+            statement = select(
+                UsageStats.model,
+                func.count(UsageStats.id).label('call_count'),
+                func.sum(UsageStats.input_tokens).label('input_tokens'),
+                func.sum(UsageStats.output_tokens).label('output_tokens'),
+                func.count(func.distinct(UsageStats.user_id)).label('user_count')
+            ).where(
+                UsageStats.create_time >= start_date
+            ).group_by(UsageStats.model)
+
+            results = session.exec(statement).all()
+            return [
+                {
+                    'model': r[0],
+                    'call_count': r[1],
+                    'input_tokens': r[2] or 0,
+                    'output_tokens': r[3] or 0,
+                    'user_count': r[4]
+                }
+                for r in results
+            ]
+
+    @classmethod
+    def get_agent_statistics(cls, start_date: datetime) -> list:
+        """获取所有Agent的使用统计"""
+        from sqlmodel import func
+        with session_getter() as session:
+            statement = select(
+                UsageStats.agent,
+                func.count(UsageStats.id).label('call_count'),
+                func.count(func.distinct(UsageStats.user_id)).label('user_count')
+            ).where(
+                UsageStats.create_time >= start_date
+            ).group_by(UsageStats.agent)
+
+            results = session.exec(statement).all()
+            return [
+                {
+                    'agent': r[0],
+                    'call_count': r[1],
+                    'user_count': r[2]
+                }
+                for r in results
+            ]

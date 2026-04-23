@@ -42,3 +42,52 @@ class MessageDownDao:
             sql = select(MessageDownTable)
             result = session.exec(sql).all()
             return result
+
+
+# ========== 管理员统计方法 ==========
+
+class MessageDao:
+    """消息统计DAO"""
+
+    @classmethod
+    def count_total_messages(cls) -> int:
+        """统计总消息数"""
+        from sqlmodel import func
+        from agentchat.database.models.history import HistoryTable
+
+        with session_getter() as session:
+            statement = select(func.count(HistoryTable.id))
+            return session.scalar(statement) or 0
+
+    @classmethod
+    def count_messages_by_date(cls, date) -> int:
+        """统计指定日期的消息数"""
+        from datetime import datetime, timedelta
+        from sqlmodel import func
+        from agentchat.database.models.history import HistoryTable
+
+        start_time = datetime.combine(date, datetime.min.time())
+        end_time = start_time + timedelta(days=1)
+
+        with session_getter() as session:
+            statement = select(func.count(HistoryTable.id)).where(
+                HistoryTable.create_time >= start_time,
+                HistoryTable.create_time < end_time
+            )
+            return session.scalar(statement) or 0
+
+    @classmethod
+    def count_user_messages(cls, user_id: str, start_date) -> int:
+        """统计指定用户从某日期开始的消息数"""
+        from sqlmodel import func
+        from agentchat.database.models.history import HistoryTable
+        from agentchat.database.models.dialog import DialogTable
+
+        with session_getter() as session:
+            statement = select(func.count(HistoryTable.id)).join(
+                DialogTable, HistoryTable.dialog_id == DialogTable.dialog_id
+            ).where(
+                DialogTable.user_id == user_id,
+                HistoryTable.create_time >= start_date
+            )
+            return session.scalar(statement) or 0

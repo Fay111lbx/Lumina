@@ -245,7 +245,7 @@ onMounted(async () => {
           <img src="../../assets/robot.svg" alt="Logo" class="logo" />
         </div>
         <div class="nav-links">
-          <img src="../../assets/agentchat.svg" alt="OmniAgent平台" class="brand-logo-img" />
+          <img src="../../assets/luminaagent.svg" alt="LuminaAgent平台" class="brand-logo-img" />
         </div>
       </div>
       <div class="nav-right">

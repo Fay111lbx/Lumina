@@ -8,7 +8,9 @@ from agentchat.api.services.agent import AgentService
 from agentchat.api.services.llm import LLMService
 from agentchat.api.services.tool import ToolService
 from agentchat.api.services.mcp_server import MCPService
+from agentchat.api.services.user import UserService
 from agentchat.database.dao.agent import AgentDao
+from agentchat.database.dao.user import UserDao
 from agentchat.database.models.user import AdminUser
 from agentchat.prompts.mcp import McpAsToolPrompt
 from agentchat.schema.mcp import MCPResponseFormat
@@ -26,8 +28,46 @@ async def init_database():
         ensure_mysql_database()
         SQLModel.metadata.create_all(engine)
         logger.success("MySQL tables are ready")
+
+        # 初始化默认管理员账号
+        await init_default_admin()
     except Exception as err:
         logger.error(f"Create MySQL Table Error: {err}")
+
+
+# 初始化默认管理员账号
+async def init_default_admin():
+    try:
+        # 检查是否已存在管理员
+        admin_user = UserDao.get_user(AdminUser)
+
+        if not admin_user:
+            logger.info("Creating default admin account")
+
+            # 从配置文件读取默认管理员信息，或使用默认值
+            default_admin_username = app_settings.server.get("default_admin_username", "admin")
+            default_admin_password = app_settings.server.get("default_admin_password", "admin123")
+            default_admin_email = ""
+
+            # 加密密码
+            encrypted_password = UserService.encrypt_sha256_password(default_admin_password)
+            user_avatar = UserService.get_random_user_avatar()
+
+            # 创建管理员账号
+            UserDao.add_user_and_admin_role(
+                user_id=AdminUser,
+                user_name=default_admin_username,
+                user_email=default_admin_email,
+                user_password=encrypted_password,
+                user_avatar=user_avatar
+            )
+
+            logger.success(f"Default admin account created: username={default_admin_username}")
+            logger.warning(f"Please change the default admin password after first login!")
+        else:
+            logger.info("Admin account already exists")
+    except Exception as err:
+        logger.error(f"Failed to initialize default admin: {err}")
 
 
 # 初始化默认工具

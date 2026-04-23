@@ -70,3 +70,40 @@ class DialogDao:
             sql = delete(DialogTable).where(DialogTable.agent_id == agent_id)
             session.exec(sql)
             session.commit()
+
+    # ========== 管理员统计方法 ==========
+
+    @classmethod
+    def count_total_dialogs(cls) -> int:
+        """统计总对话数"""
+        from sqlmodel import func
+        with session_getter() as session:
+            statement = select(func.count(DialogTable.dialog_id))
+            return session.scalar(statement) or 0
+
+    @classmethod
+    def count_dialogs_by_date(cls, date) -> int:
+        """统计指定日期的对话数"""
+        from datetime import datetime, timedelta
+        from sqlmodel import func
+
+        start_time = datetime.combine(date, datetime.min.time())
+        end_time = start_time + timedelta(days=1)
+
+        with session_getter() as session:
+            statement = select(func.count(DialogTable.dialog_id)).where(
+                DialogTable.create_time >= start_time,
+                DialogTable.create_time < end_time
+            )
+            return session.scalar(statement) or 0
+
+    @classmethod
+    def count_user_dialogs(cls, user_id: str, start_date: datetime) -> int:
+        """统计指定用户从某日期开始的对话数"""
+        from sqlmodel import func
+        with session_getter() as session:
+            statement = select(func.count(DialogTable.dialog_id)).where(
+                DialogTable.user_id == user_id,
+                DialogTable.create_time >= start_date
+            )
+            return session.scalar(statement) or 0

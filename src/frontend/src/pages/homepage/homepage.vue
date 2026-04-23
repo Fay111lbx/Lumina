@@ -82,8 +82,8 @@ const handleExampleClick = async (example: any, index: number) => {
     <!-- Logo区域 -->
     <div class="logo-section">
       <div class="logo-container">
-                 <img src="../../assets/mars-agent.svg" alt="OmniAgent" class="logo" />
-         <h1 class="brand-name">OmniAgent</h1>
+                 <img src="../../assets/luminaagent.svg" alt="LuminaAgent" class="logo" />
+         <h1 class="brand-name">LuminaAgent</h1>
       </div>
     </div>
 
@@ -94,7 +94,7 @@ const handleExampleClick = async (example: any, index: number) => {
                      <div class="search-input-wrapper">
              <textarea
                v-model="searchQuery"
-               placeholder="OmniAgent会完成你的任务并输出结果。"
+               placeholder="LuminaAgent 会照亮你的知识世界，完成你的任务并输出结果。"
                class="search-input"
                @keydown="handleKeydown"
                rows="3"
@@ -216,7 +216,7 @@ const handleExampleClick = async (example: any, index: number) => {
     .brand-name {
        font-size: 48px; /* 增大品牌名称字体大小 */
        font-weight: 800;
-      background: linear-gradient(135deg, #ffb366 0%, #ff9a4d 35%, #ff7f2a 70%, #ffb366 100%);
+      background: linear-gradient(135deg, #ff9f43 0%, #ff8c1a 35%, #ff6b6b 70%, #ff9f43 100%);
        -webkit-background-clip: text;
        -webkit-text-fill-color: transparent;
        background-clip: text;
@@ -225,11 +225,11 @@ const handleExampleClick = async (example: any, index: number) => {
        letter-spacing: -1px;
        
        &::before {
-         content: 'OmniAgent';
+         content: 'LuminaAgent';
          position: absolute;
          top: 2px;
          left: 2px;
-        background: linear-gradient(135deg, rgba(255, 183, 77, 0.4), rgba(255, 152, 0, 0.4));
+        background: linear-gradient(135deg, rgba(74, 144, 226, 0.4), rgba(155, 89, 182, 0.4));
          -webkit-background-clip: text;
          -webkit-text-fill-color: transparent;
          background-clip: text;
@@ -244,7 +244,7 @@ const handleExampleClick = async (example: any, index: number) => {
          left: 0;
          right: 0;
          height: 3px;
-        background: linear-gradient(90deg, transparent, #ffb366, #ffcc99, #ffb366, transparent);
+        background: linear-gradient(90deg, transparent, #ff9f43, #ff8c1a, #ff6b6b, transparent);
          border-radius: 2px;
          opacity: 0.6;
        }
@@ -282,7 +282,7 @@ const handleExampleClick = async (example: any, index: number) => {
        
        &:focus-within {
          border-color: #ff9f43;
-         box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.1);
+         box-shadow: 0 0 0 4px rgba(155, 89, 182, 0.1);
        }
       
              .search-input {
@@ -338,7 +338,7 @@ const handleExampleClick = async (example: any, index: number) => {
     }
     
     .send-button {
-      background: #ff9f43;
+      background: linear-gradient(135deg, #ff9f43, #ff6b6b);
       color: white;
       border: none;
       padding: 8px;
@@ -354,13 +354,13 @@ const handleExampleClick = async (example: any, index: number) => {
       box-shadow: 0 2px 6px rgba(255, 159, 67, 0.3);
       
       &:hover {
-        background: #ff8c1a;
-        box-shadow: 0 3px 8px rgba(255, 159, 67, 0.4);
+        background: linear-gradient(135deg, #5A9FE8, #A366C0);
+        box-shadow: 0 3px 8px rgba(74, 144, 226, 0.4);
       }
       
       &:active {
-        background: #e67e22;
-        box-shadow: 0 1px 3px rgba(255, 159, 67, 0.3);
+        background: linear-gradient(135deg, #3A7BC8, #8B49A6);
+        box-shadow: 0 1px 3px rgba(74, 144, 226, 0.3);
       }
     }
   }
@@ -425,7 +425,7 @@ const handleExampleClick = async (example: any, index: number) => {
         }
         
         .example-category {
-          background: #fff3e0;
+          background: linear-gradient(135deg, #fff3e0, #ffe0b2);
           color: #ff9f43;
           padding: 4px 12px;
           border-radius: 12px;
@@ -474,7 +474,7 @@ const handleExampleClick = async (example: any, index: number) => {
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 6px rgba(255, 159, 67, 0.3);
+            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
             
             &::before {
               content: '⚡';
@@ -551,7 +551,7 @@ const handleExampleClick = async (example: any, index: number) => {
             
             .search-icon {
               font-size: 12px;
-              filter: drop-shadow(0 1px 2px rgba(255, 159, 67, 0.4));
+              filter: drop-shadow(0 1px 2px rgba(74, 144, 226, 0.4));
             }
           }
           
@@ -565,7 +565,7 @@ const handleExampleClick = async (example: any, index: number) => {
             
             .wave {
               width: 3px;
-              background: linear-gradient(to top, #ff9f43, #ff8c1a);
+              background: linear-gradient(to top, #ff9f43, #ff6b6b);
               border-radius: 2px;
               
               &.wave1 {

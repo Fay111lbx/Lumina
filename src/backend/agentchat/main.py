@@ -3,8 +3,8 @@ import warnings
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi_jwt_auth import AuthJWT
-from fastapi_jwt_auth.exceptions import AuthJWTException
+# from fastapi_jwt_auth import AuthJWT
+# from fastapi_jwt_auth.exceptions import AuthJWTException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -90,20 +90,20 @@ def create_app():
 
     app = register_middleware(app)
 
-    from agentchat.api.JWT import Settings
+    # from agentchat.api.JWT import Settings
 
-    # 配置 AuthJWT
-    @AuthJWT.load_config
-    def get_config():
-        return Settings()
+    # # 配置 AuthJWT
+    # @AuthJWT.load_config
+    # def get_config():
+    #     return Settings()
 
-    # 处理 AuthJWT 异常
-    @app.exception_handler(AuthJWTException)
-    def authjwt_exception_handler(request, exc):
-        return JSONResponse(
-            status_code=exc.status_code,
-            content={"detail": exc.message}
-        )
+    # # 处理 AuthJWT 异常
+    # @app.exception_handler(AuthJWTException)
+    # def authjwt_exception_handler(request, exc):
+    #     return JSONResponse(
+    #         status_code=exc.status_code,
+    #         content={"detail": exc.message}
+    #     )
 
     return app
 

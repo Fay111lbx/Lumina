@@ -153,6 +153,21 @@ class MCPService:
         mcp_servers.extend(await MCPServerDao.get_mcp_server_ids_from_name(mcp_servers_name, SystemUser))
         return [mcp_server.mcp_server_id for mcp_server in mcp_servers]
 
+    @classmethod
+    async def get_server_by_name(cls, server_name: str):
+        """
+        根据服务名称获取 MCP Server
+        :param server_name: 服务名称
+        :return: MCP Server 信息
+        """
+        try:
+            server = await MCPServerDao.get_server_by_name(server_name)
+            if server:
+                return server.to_dict()
+            return None
+        except Exception as err:
+            raise ValueError(f"Get MCP Server By Name Error: {err}")
+
 
     @classmethod
     def validate_imported_config(cls, payload: Dict[str, Any]):

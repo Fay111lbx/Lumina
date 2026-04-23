@@ -103,3 +103,15 @@ class MCPServerDao:
                                                     MCPServerTable.user_id == user_id))
             result = session.exec(sql)
             return result.all()
+
+    @classmethod
+    async def get_server_by_name(cls, server_name: str):
+        """
+        根据服务名称获取 MCP Server
+        :param server_name: 服务名称
+        :return: MCP Server 信息
+        """
+        with session_getter() as session:
+            sql = select(MCPServerTable).where(MCPServerTable.server_name == server_name)
+            result = session.exec(sql).first()
+            return result

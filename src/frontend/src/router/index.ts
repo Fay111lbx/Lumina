@@ -26,6 +26,7 @@ import WorkspacePage from '../pages/workspace/workspacePage/workspacePage.vue'
 import WorkspaceDefaultPage from '../pages/workspace/defaultPage/defaultPage.vue'
 import TaskGraphPage from '../pages/workspace/taskGraphPage/taskGraphPage.vue'
 import Dashboard from '../pages/dashboard'
+import AdminDashboard from '../pages/admin/admin-dashboard.vue'
 import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
@@ -221,6 +222,15 @@ const routes: RouteRecordRaw[] = [
           current: 'dashboard'
         },
         component: Dashboard,
+      },
+      {
+        path: '/admin',
+        name: 'admin',
+        meta: {
+          current: 'admin',
+          requiresAdmin: true
+        },
+        component: AdminDashboard,
       }
     ]
   },

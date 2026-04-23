@@ -4,7 +4,8 @@ import rsa
 import hashlib
 from base64 import b64decode
 from urllib.parse import urlparse
-from fastapi_jwt_auth import AuthJWT
+# from fastapi_jwt_auth import AuthJWT
+from agentchat.utils.jwt_helper import create_access_token, create_refresh_token, verify_token
 from fastapi import Request, Depends, HTTPException
 
 
@@ -139,7 +140,7 @@ class UserService:
         user = UserDao.get_user_by_username(user_name)
         return user.user_id
 
-async def get_login_user(request: Request, authorize: AuthJWT = Depends()) -> UserPayload:
+async def get_login_user(request: Request) -> UserPayload:
     """
     获取当前登录的用户
     """
@@ -149,8 +150,18 @@ async def get_login_user(request: Request, authorize: AuthJWT = Depends()) -> Us
 
     # 非白名单路径：执行 JWT 验证
     try:
-        authorize.jwt_required()
-        current_user = json.loads(authorize.get_jwt_subject())
+        # 从请求头或cookie中获取token
+        token = None
+        if "Authorization" in request.headers:
+            token = request.headers["Authorization"].replace("Bearer ", "")
+        elif "access_token_cookie" in request.cookies:
+            token = request.cookies["access_token_cookie"]
+
+        if not token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+
+        payload = verify_token(token)
+        current_user = json.loads(payload.get("sub"))
         return UserPayload(**current_user)
     except Exception as e:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
@@ -177,9 +188,9 @@ def get_user_jwt(db_user: UserTable):
     # 生成JWT令牌
     payload = {'user_name': db_user.user_name, 'user_id': db_user.user_id, 'role': role}
 
-    access_token = AuthJWT().create_access_token(subject=json.dumps(payload), expires_time=ACCESS_TOKEN_EXPIRE_TIME)
+    access_token = create_access_token(data={"sub": json.dumps(payload)}, expires_delta=ACCESS_TOKEN_EXPIRE_TIME)
 
-    refresh_token = AuthJWT().create_refresh_token(subject=db_user.user_name)
+    refresh_token = create_refresh_token(subject=db_user.user_name)
 
     # Set the JWT cookies in the response
     return access_token, refresh_token, role

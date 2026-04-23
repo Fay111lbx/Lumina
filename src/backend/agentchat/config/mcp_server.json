@@ -36,5 +36,25 @@
     "params": {},
     "config_enabled": true,
     "logo_url": "https://agentchat.oss-cn-beijing.aliyuncs.com/icons/mcp/feishu.png"
+  },
+  {
+    "server_name": "邮件发送",
+    "url": "internal://email",
+    "type": "internal",
+    "config": [
+      {
+        "label": "发件人邮箱",
+        "key": "sender_email",
+        "value": ""
+      },
+      {
+        "label": "邮箱授权码",
+        "key": "email_password",
+        "value": ""
+      }
+    ],
+    "params": {},
+    "config_enabled": true,
+    "logo_url": "https://agentchat.oss-cn-beijing.aliyuncs.com/icons/tools/default.png"
   }
 ]

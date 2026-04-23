@@ -23,7 +23,7 @@ const agentCardStore = useAgentCardStore()
 const userStore = useUserStore()
 const route = useRoute()
 const router = useRouter()
-const itemName = ref("OmniAgent平台")
+const itemName = ref("LuminaAgent平台")
 const showAppCenterMenu = ref(false)
 let appCenterHoverTimer: any = null
 
@@ -176,7 +176,7 @@ watch(
           <img :src="robotIcon" alt="Logo" class="logo" />
         </div>
         <div class="nav-links">
-          <img src="../assets/agentchat.svg" alt="智言平台" class="brand-logo-img" />
+          <img src="../assets/873ca22f-de83-4e71-97a3-90b54f18e44c.svg" alt="LuminaAgent" class="brand-logo-img" />
         </div>
       </div>
       <div class="right">

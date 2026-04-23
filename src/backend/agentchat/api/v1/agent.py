@@ -96,6 +96,71 @@ async def update_agent(
         return resp_500(message=str(err))
 
 
+@router.get("/agent/{agent_id}", response_model=UnifiedResponseModel)
+async def get_agent_by_id(
+    agent_id: str,
+    login_user: UserPayload = Depends(get_login_user)
+):
+    """根据ID获取单个智能体详情"""
+    try:
+        result = await AgentService.select_agent_by_id(agent_id=agent_id)
+        if not result:
+            return resp_500(message="智能体不存在")
+
+        # 验证用户权限（只能查看自己的或系统的智能体）
+        if result.get('user_id') != login_user.user_id and result.get('user_id') != '0':
+            return resp_500(message="没有权限访问该智能体")
+
+        return resp_200(data=result)
+    except Exception as err:
+        logger.error(err)
+        return resp_500(message=str(err))
+
+
+@router.post("/agent/{agent_id}/clone", response_model=UnifiedResponseModel)
+async def clone_agent(
+    agent_id: str,
+    login_user: UserPayload = Depends(get_login_user)
+):
+    """克隆智能体"""
+    try:
+        # 获取原智能体信息
+        original_agent = await AgentService.select_agent_by_id(agent_id=agent_id)
+        if not original_agent:
+            return resp_500(message="原智能体不存在")
+
+        # 验证用户权限
+        if original_agent.get('user_id') != login_user.user_id and original_agent.get('user_id') != '0':
+            return resp_500(message="没有权限克隆该智能体")
+
+        # 创建新的智能体名称
+        new_name = f"{original_agent.get('name')} - 副本"
+        counter = 1
+        while await AgentService.check_repeat_name(name=new_name, user_id=login_user.user_id):
+            counter += 1
+            new_name = f"{original_agent.get('name')} - 副本{counter}"
+
+        # 创建克隆的智能体
+        from agentchat.schema.agent import AgentCreateReq
+        clone_req = AgentCreateReq(
+            name=new_name,
+            description=original_agent.get('description', ''),
+            logo_url=original_agent.get('logo_url', ''),
+            tool_ids=original_agent.get('tool_ids', []),
+            llm_id=original_agent.get('llm_id', ''),
+            mcp_ids=original_agent.get('mcp_ids', []),
+            system_prompt=original_agent.get('system_prompt', ''),
+            knowledge_ids=original_agent.get('knowledge_ids', []),
+            enable_memory=original_agent.get('enable_memory', False)
+        )
+
+        result = await AgentService.create_agent(login_user, clone_req)
+        return resp_200(data=result, message=f"智能体已克隆为: {new_name}")
+    except Exception as err:
+        logger.error(err)
+        return resp_500(message=str(err))
+
+
 @router.post("/agent/search", response_model=UnifiedResponseModel)
 async def search_agent(
     req: AgentSearchReq,

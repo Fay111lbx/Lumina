@@ -14,11 +14,12 @@
         <div class="header">
           <div class="logo-wrapper">
             <div class="logo-icon">
-              <img src="../../assets/agentchat.svg" alt="OmniAgent" class="logo-img" />
+              <img src="../../assets/luminaagent.svg" alt="LuminaAgent" class="logo-img" />
             </div>
-            <h1 class="logo-text">OmniAgent</h1>
+            <h1 class="logo-text">LuminaAgent</h1>
           </div>
-          <p class="subtitle">开启您的智能协作新纪元</p>
+          <p class="subtitle">照亮你的知识世界</p>
+          <p class="subtitle-en">Illuminate Your Knowledge</p>
         </div>
 
         <!-- 登录表单 -->
@@ -167,7 +168,7 @@ const goToRegister = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff9f2;
+  background: linear-gradient(135deg, #e8f4fd 0%, #f3e8ff 100%);
   position: relative;
   overflow: hidden;
   font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
@@ -261,7 +262,7 @@ const goToRegister = () => {
       align-items: center;
       justify-content: center;
       box-shadow: 0 8px 16px rgba(255, 159, 67, 0.2);
-      
+
       .logo-img {
         width: 40px;
         height: 40px;
@@ -285,6 +286,14 @@ const goToRegister = () => {
     color: #8d6e63;
     margin: 0;
   }
+
+  .subtitle-en {
+    font-size: 13px;
+    color: #ff9f43;
+    margin: 4px 0 0 0;
+    font-style: italic;
+    opacity: 0.8;
+  }
 }
 
 .login-form {
@@ -295,7 +304,7 @@ const goToRegister = () => {
   .custom-input {
     :deep(.el-input__wrapper) {
       background-color: #fff;
-      border: 1px solid #ffe0b2;
+      border: 2px solid #ffe0b2;
       box-shadow: none !important;
       border-radius: 12px;
       padding: 4px 12px;
@@ -315,10 +324,10 @@ const goToRegister = () => {
     :deep(.el-input__inner) {
       height: 48px;
       font-size: 15px;
-      color: #5c3d2e;
+      color: #333;
 
       &::placeholder {
-        color: #ffbd69;
+        color: #b8b8b8;
       }
     }
 
@@ -335,7 +344,7 @@ const goToRegister = () => {
     margin-bottom: 30px;
 
     :deep(.el-checkbox__label) {
-      color: #8d6e63;
+      color: #666;
       font-size: 14px;
     }
 
@@ -367,10 +376,11 @@ const goToRegister = () => {
     color: #fff;
     margin-bottom: 20px;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3);
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(255, 159, 67, 0.3);
+      box-shadow: 0 8px 25px rgba(255, 159, 67, 0.4);
       opacity: 0.95;
     }
 
@@ -382,13 +392,13 @@ const goToRegister = () => {
   .register-footer {
     text-align: center;
     font-size: 14px;
-    color: #8d6e63;
+    color: #666;
 
     :deep(.el-button--link) {
       color: #ff9f43;
       font-weight: 600;
       padding: 0 4px;
-      
+
       &:hover {
         color: #ff8c1a;
       }
@@ -399,17 +409,18 @@ const goToRegister = () => {
 .footer {
   margin-top: 40px;
   padding-top: 20px;
-  border-top: 1px solid #ffe0b2;
+  border-top: 1px solid rgba(255, 159, 67, 0.15);
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   .version {
     font-size: 12px;
-    color: #ffbd69;
+    color: #ff9f43;
     background: #fff3e0;
-    padding: 2px 8px;
-    border-radius: 6px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: 500;
   }
 
   .links {

@@ -7,7 +7,7 @@
           <h3>离开页面提醒</h3>
         </div>
         <div class="leave-modal-body">
-          <p>🔔 OmniAgent 不会保存您的聊天记录</p>
+          <p>🔔 LuminaAgent 不会保存您的聊天记录</p>
           <p>离开此页面后，当前对话内容将无法找回。</p>
           <p>确定要离开吗？</p>
         </div>
@@ -604,7 +604,7 @@ onMounted(() => {
   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
     if (hasContent.value) {
       event.preventDefault()
-      event.returnValue = 'OmniAgent 不会保存您的聊天记录，离开后将无法找回。确定要离开吗？'
+      event.returnValue = 'LuminaAgent 不会保存您的聊天记录，离开后将无法找回。确定要离开吗？'
       return event.returnValue
     }
   }

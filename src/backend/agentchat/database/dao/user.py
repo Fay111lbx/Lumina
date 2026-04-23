@@ -69,7 +69,7 @@ class UserDao:
         user_number = len(cls.get_user_number()) + 1
         with session_getter() as session:
             session.add(UserTable(user_id=str(user_number), user_name=user_name, user_avatar=user_avatar,
-                                  user_email=user_email, user_password=user_password))
+                                  user_email=user_email, user_password=user_password, is_admin=False))
             session.commit()
 
     @classmethod
@@ -80,7 +80,7 @@ class UserDao:
         """
         with session_getter() as session:
             session.add(UserTable(user_email=user_email, user_id=user_id, user_avatar=user_avatar,
-                                  user_name=user_name, user_password=user_password))
+                                  user_name=user_name, user_password=user_password, is_admin=True))
             session.commit()
 
     @classmethod
@@ -115,5 +115,99 @@ class UserDao:
             if user_description:
                 update_values["user_description"] = user_description
             statement = update(UserTable).where(UserTable.user_id == user_id).values(**update_values)
+            session.exec(statement)
+            session.commit()
+
+    # ========== 管理员统计方法 ==========
+
+    @classmethod
+    def count_total_users(cls) -> int:
+        """统计总用户数"""
+        with session_getter() as session:
+            statement = select(func.count(UserTable.user_id)).where(UserTable.delete == False)
+            return session.scalar(statement) or 0
+
+    @classmethod
+    def count_users_by_date(cls, date) -> int:
+        """统计指定日期新增的用户数"""
+        from datetime import datetime, timedelta
+        start_time = datetime.combine(date, datetime.min.time())
+        end_time = start_time + timedelta(days=1)
+
+        with session_getter() as session:
+            statement = select(func.count(UserTable.user_id)).where(
+                UserTable.create_time >= start_time,
+                UserTable.create_time < end_time,
+                UserTable.delete == False
+            )
+            return session.scalar(statement) or 0
+
+    @classmethod
+    def count_active_users(cls, days: int = 7) -> int:
+        """统计最近N天活跃的用户数（有对话记录的用户）"""
+        from datetime import datetime, timedelta
+        from agentchat.database.models.dialog import DialogTable
+
+        start_time = datetime.now() - timedelta(days=days)
+
+        with session_getter() as session:
+            statement = select(func.count(func.distinct(DialogTable.user_id))).where(
+                DialogTable.create_time >= start_time
+            )
+            return session.scalar(statement) or 0
+
+    @classmethod
+    def count_active_users_by_date(cls, date) -> int:
+        """统计指定日期活跃的用户数"""
+        from datetime import datetime, timedelta
+        from agentchat.database.models.dialog import DialogTable
+
+        start_time = datetime.combine(date, datetime.min.time())
+        end_time = start_time + timedelta(days=1)
+
+        with session_getter() as session:
+            statement = select(func.count(func.distinct(DialogTable.user_id))).where(
+                DialogTable.create_time >= start_time,
+                DialogTable.create_time < end_time
+            )
+            return session.scalar(statement) or 0
+
+    @classmethod
+    def get_users_paginated(cls, page: int, page_size: int, keyword: str = None):
+        """分页获取用户列表（支持搜索）"""
+        with session_getter() as session:
+            statement = select(UserTable).where(UserTable.delete == False)
+            count_statement = select(func.count(UserTable.user_id)).where(UserTable.delete == False)
+
+            if keyword:
+                statement = statement.where(UserTable.user_name.like(f'%{keyword}%'))
+                count_statement = count_statement.where(UserTable.user_name.like(f'%{keyword}%'))
+
+            total = session.scalar(count_statement) or 0
+
+            statement = statement.order_by(UserTable.create_time.desc())
+            statement = statement.offset((page - 1) * page_size).limit(page_size)
+
+            users = session.exec(statement).all()
+            return users, total
+
+    @classmethod
+    def get_user_by_id(cls, user_id: str):
+        """根据ID获取用户"""
+        return cls.get_user(user_id)
+
+    @classmethod
+    def disable_user(cls, user_id: str):
+        """禁用用户"""
+        with session_getter() as session:
+            statement = update(UserTable).where(UserTable.user_id == user_id).values(delete=True)
+            session.exec(statement)
+            session.commit()
+
+    @classmethod
+    def enable_user(cls, user_id: str):
+        """启用用户"""
+        with session_getter() as session:
+            statement = update(UserTable).where(UserTable.user_id == user_id).values(delete=False)
             session.exec(statement)
             session.commit()

@@ -14,11 +14,12 @@
         <div class="header">
           <div class="logo-wrapper">
             <div class="logo-icon">
-              <img src="../../assets/agentchat.svg" alt="OmniAgent" class="logo-img" />
+              <img src="../../assets/luminaagent.svg" alt="LuminaAgent" class="logo-img" />
             </div>
-            <h1 class="logo-text">OmniAgent</h1>
+            <h1 class="logo-text">LuminaAgent</h1>
           </div>
-          <p class="subtitle">创建您的账户，开启智能协作之旅</p>
+          <p class="subtitle">创建您的账户，照亮知识世界</p>
+          <p class="subtitle-en">Create Your Account</p>
         </div>
 
         <!-- 注册表单 -->
@@ -199,7 +200,7 @@ const goToLogin = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff9f2;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
   position: relative;
   overflow: hidden;
   font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
@@ -224,7 +225,7 @@ const goToLogin = () => {
   .blob-1 {
     width: 400px;
     height: 400px;
-    background: #ffe0b2;
+    background: linear-gradient(135deg, #ff9f43 0%, #ff8c1a 100%);
     top: -100px;
     right: -100px;
     animation: move1 20s infinite alternate;
@@ -233,7 +234,7 @@ const goToLogin = () => {
   .blob-2 {
     width: 500px;
     height: 500px;
-    background: #ffccbc;
+    background: linear-gradient(135deg, #ff8c1a 0%, #ff9f43 100%);
     bottom: -150px;
     left: -100px;
     animation: move2 25s infinite alternate;
@@ -242,7 +243,7 @@ const goToLogin = () => {
   .blob-3 {
     width: 300px;
     height: 300px;
-    background: #fff3e0;
+    background: linear-gradient(135deg, #4A90E2 30%, #9B59B6 70%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -262,12 +263,12 @@ const goToLogin = () => {
 .register-card {
   width: 100%;
   max-width: 440px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 224, 178, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 24px;
   padding: 40px;
-  box-shadow: 0 20px 40px rgba(255, 159, 67, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   position: relative;
   z-index: 2;
   margin: 20px;
@@ -287,13 +288,13 @@ const goToLogin = () => {
     .logo-icon {
       width: 56px;
       height: 56px;
-      background: #fff;
+      background: linear-gradient(135deg, #ff9f43 0%, #ff8c1a 100%);
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 16px rgba(255, 159, 67, 0.15);
-      
+      box-shadow: 0 8px 20px rgba(255, 159, 67, 0.3);
+
       .logo-img {
         width: 32px;
         height: 32px;
@@ -302,20 +303,29 @@ const goToLogin = () => {
     }
 
     .logo-text {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 800;
       background: linear-gradient(135deg, #ff9f43 0%, #ff6b6b 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin: 0;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
   }
 
   .subtitle {
-    font-size: 14px;
-    color: #8d6e63;
-    margin: 0;
+    font-size: 15px;
+    color: #5a5a5a;
+    margin: 8px 0 0 0;
+    font-weight: 500;
+  }
+
+  .subtitle-en {
+    font-size: 12px;
+    color: #ff9f43;
+    margin: 4px 0 0 0;
+    font-style: italic;
+    opacity: 0.8;
   }
 }
 
@@ -327,7 +337,7 @@ const goToLogin = () => {
   .custom-input {
     :deep(.el-input__wrapper) {
       background-color: #fff;
-      border: 1px solid #ffe0b2;
+      border: 2px solid #fff3e0;
       box-shadow: none !important;
       border-radius: 12px;
       padding: 4px 12px;
@@ -338,7 +348,7 @@ const goToLogin = () => {
       }
 
       &.is-focus {
-        border-color: #ff9f43;
+        border-color: #ff8c1a;
         background-color: #fff;
         box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.1) !important;
       }
@@ -347,10 +357,10 @@ const goToLogin = () => {
     :deep(.el-input__inner) {
       height: 44px;
       font-size: 14px;
-      color: #5c3d2e;
+      color: #333;
 
       &::placeholder {
-        color: #ffbd69;
+        color: #b8b8b8;
       }
     }
 
@@ -372,10 +382,11 @@ const goToLogin = () => {
     margin-top: 10px;
     margin-bottom: 16px;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3);
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(255, 159, 67, 0.3);
+      box-shadow: 0 8px 25px rgba(255, 159, 67, 0.4);
       opacity: 0.95;
     }
 
@@ -387,13 +398,13 @@ const goToLogin = () => {
   .login-footer {
     text-align: center;
     font-size: 14px;
-    color: #8d6e63;
+    color: #666;
 
     :deep(.el-button--link) {
       color: #ff9f43;
       font-weight: 600;
       padding: 0 4px;
-      
+
       &:hover {
         color: #ff8c1a;
       }

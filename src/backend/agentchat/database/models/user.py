@@ -24,6 +24,7 @@ class UserTable(SQLModelSerializable, table=True):
     user_avatar: str = Field(description="用户头像")
     user_description: str = Field(default="该用户很懒，没有留下一片云彩")
     user_password: str = Field(description='经过加密后的用户密码')
+    is_admin: bool = Field(default=False, description='是否为管理员')
     delete: bool = Field(default=False, description='该用户是否删除')
     create_time: Optional[datetime] = Field(sa_column=Column(
         DateTime, nullable=False, index=True, server_default=text('CURRENT_TIMESTAMP')))
